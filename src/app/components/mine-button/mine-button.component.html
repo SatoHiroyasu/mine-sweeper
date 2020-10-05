@@ -1,5 +1,6 @@
-<div class="mine-button-wrapper" name="mine-button" (click)="openDisplay()">
-    <div class="mine-display" *ngIf="isOpened">
+<div class="mine-button-wrapper" name="mine-button" (click)="openDisplay()"
+(contextmenu)="setFlag()">
+    <div class="mine-display" *ngIf="flagValue >= 1 || isOpened">
         {{ display }}
     </div>
 </div>

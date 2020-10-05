@@ -7,6 +7,18 @@ import { GameAreaComponent } from '../game-area/game-area.component';
 import { OpenMineService } from 'src/app/services/open-mine.service'
 import { MineFieldService } from 'src/app/services/mine-field.service';
 
+const FLAG_VALUES = {
+  0: 0,
+  1: -99,
+  2: 99
+}
+
+const FLAG_COLOR = {
+  0: "black",
+  1: "red",
+  2: "cyan"
+}
+
 @Component({
   selector: 'mine-button',
   templateUrl: './mine-button.component.html',
@@ -20,6 +32,7 @@ export class MineButtonComponent implements OnInit {
   public mineValue = 0;
   public isOpened = false;
   public isGameOver = false;
+  public flagValue = 0;
   public mineField: number[][];
   private subsc: Subscription;
 
@@ -72,13 +85,15 @@ export class MineButtonComponent implements OnInit {
   }
 
   public openDisplay() {
-    if(this.isGameOver){
+    if(this.isGameOver || this.isOpened || this.flagValue >= 1){
       return;
     }
     this.isOpened = true;
     if(this.mineValue == -1) {
+      this.display = ButtonDisplays[this.mineValue];
       this.getThisElement().style.backgroundColor = "red";
     }else if(this.mineValue == 0) {
+      this.display = "";
       this.getThisElement().style.backgroundColor = "#338833"
     }else {
       this.display = this.mineValue + "";
@@ -91,10 +106,21 @@ export class MineButtonComponent implements OnInit {
     });
     this.subsc.unsubscribe();
   }
+
+  public setFlag() {
+    if(this.isGameOver || this.isOpened){
+      return false;
+    }
+    this.flagValue = (this.flagValue + 1) % 3;
+    this.display = ButtonDisplays[FLAG_VALUES[this.flagValue]];
+    this.getThisElement().style.color = FLAG_COLOR[this.flagValue];
+    return false;
+  }
 }
 
 export enum ButtonDisplays {
   "" = 0,
   "*" = -1,
-  "X" = -99
+  "X" = -99,
+  "?" = 99
 }
