@@ -1,0 +1,10 @@
+<div class="game-area-wrapper">
+    <game-header></game-header>
+    <div class="mine-button-area">
+        <div class="mine-button-row" *ngFor="let array of buttonArray; index as top">
+            <div class="mine-button-col" *ngFor="let button of array; index as left">
+                <mine-button [left]="left" [top]="top"></mine-button>
+            </div>
+        </div>
+    </div>
+</div>

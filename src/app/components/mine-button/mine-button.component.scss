@@ -1,0 +1,11 @@
+.mine-button-wrapper {
+    border: 1px solid lightgreen;
+    display: flex;
+    justify-content: center;
+
+    .mine-display {
+        height: 100%;
+        // width: 100%;
+        cursor: default;
+    }
+}

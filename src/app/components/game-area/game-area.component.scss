@@ -1,0 +1,18 @@
+.game-area-wrapper {
+    border: 1px solid lightgreen;
+    height: max-content;
+    width: max-content;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+
+    .mine-button-area {
+        display: flex;
+        flex-direction: column;
+
+        .mine-button-row {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+}
