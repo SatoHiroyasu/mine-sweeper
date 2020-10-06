@@ -40,18 +40,19 @@ export class MineButtonComponent implements OnInit {
   constructor(
     private sbSvc: StandByService,
     private omSvc: OpenMineService,
-    private fiSvc: FlagInfoService
+    private fiSvc: FlagInfoService,
+    private mfSvc: MineFieldService
   ) {}
 
   ngOnInit(): void {
     this.initializeParams();
     this.setButtonStyle();
-    this.minesSubscribe();
-    this.openMineSubscribe();
-    this.codeSubscribe();
+    this.subscribeAll();
   }
 
   private initializeParams() {
+    this.getThisElement().style.backgroundColor = "black";
+    this.getThisElement().style.color = "black";
     this.display = '';
     this.mineValue = 0;
     this.isOpened = false;
@@ -71,17 +72,20 @@ export class MineButtonComponent implements OnInit {
     element.style.fontSize = Styles.BUTTON_FONT_SIZE + 'px';
   }
 
+  private subscribeAll() {
+    this.minesSubscribe();
+    this.openMineSubscribe();
+    this.codeSubscribe();
+    this.restartSubscribe();
+  }
+
   private minesSubscribe() {
     this.subsc = this.sbSvc.getMines$().subscribe(
       (mine) => {
-        this.initializeParams();
-        if (mine.left == this.left && mine.top == this.top) {
-          this.mineValue = -1;
-          this.display = ButtonDisplays[-1];
-        } else if (
-          this.mineValue >= 0 &&
+        if (
           Math.abs(mine.left - this.left) <= 1 &&
-          Math.abs(mine.top - this.top) <= 1
+          Math.abs(mine.top - this.top) <= 1 &&
+          !(mine.left == this.left && mine.top == this.top)
         ) {
           this.mineValue++;
         }
@@ -89,8 +93,21 @@ export class MineButtonComponent implements OnInit {
       (error) => {
         console.log(error);
       },
-      () => {}
+      () => {
+        if(this.mfSvc.getMineField()[this.top][this.left] == -1){
+          this.mineValue = -1;
+          this.display = ButtonDisplays[-1];
+        }
+      }
     );
+  }
+  
+  private restartSubscribe() {
+    this.subsc = this.sbSvc.getRestart$().subscribe(() => {
+      this.subsc.unsubscribe();
+      this.initializeParams();
+      this.subscribeAll();
+    })
   }
 
   private openMineSubscribe() {
@@ -98,8 +115,8 @@ export class MineButtonComponent implements OnInit {
       .getOpenMine$()
       .pipe(
         filter((info, index) => {
-          return (
-            !this.isOpened &&
+          return (info.value == -1) || (
+            !this.isOpened && info.value == 0 &&
             Math.abs(info.left - this.left) <= 1 &&
             Math.abs(info.top - this.top) <= 1
           );
@@ -107,7 +124,11 @@ export class MineButtonComponent implements OnInit {
       )
       .subscribe(
         (info) => {
-          this.openDisplay();
+          if(info.value == -1){
+            this.isGameOver = true;
+          }else if(info.value == 0){
+            this.openDisplay();
+          }
         },
         (error) => console.log(error),
         () => {
@@ -136,7 +157,7 @@ export class MineButtonComponent implements OnInit {
       top: this.top,
       value: this.mineValue,
     });
-    this.subsc.unsubscribe();
+    // this.subsc.unsubscribe();
   }
 
   public setFlag() {
@@ -176,6 +197,6 @@ export class MineButtonComponent implements OnInit {
 export enum ButtonDisplays {
   '' = 0,
   '*' = -1,
-  'X' = -99,
+  'P' = -99,
   '?' = 99,
 }

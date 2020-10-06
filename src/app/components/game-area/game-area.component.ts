@@ -9,28 +9,30 @@ import { StandByService } from 'src/app/services/stand-by.service';
   styleUrls: ['./game-area.component.scss'],
 })
 export class GameAreaComponent implements OnInit {
-  static HEIGHT = 20;
-  static WIDTH = 40;
-  static MINE_NUM = 100;
+  static HEIGHT = 10;
+  static WIDTH = 10;
+  static MINE_NUM = 20;
   public buttonArray = [];
   private subsc: Subscription;
 
   constructor(private sbSvc: StandByService) {}
 
   ngOnInit(): void {
-    this.setButtonArray();
+    this.buttonArray = this.createButtonArray();
     this.setButtonStyles();
     this.standBy();
-    this.standBySubscribe();
+    this.restartSubscribe();
   }
 
-  private setButtonArray() {
+  private createButtonArray() {
+    let arr = []
     for (let i = 0; i < GameAreaComponent.HEIGHT; i++) {
-      this.buttonArray.push([]);
+      arr.push([]);
       for (let j = 0; j < GameAreaComponent.WIDTH; j++) {
-        this.buttonArray[i].push(0);
+        arr[i].push(0);
       }
     }
+    return arr;
   }
 
   private setButtonStyles() {
@@ -43,12 +45,12 @@ export class GameAreaComponent implements OnInit {
 
   private standBy() {
     this.sbSvc.standByMines(
-      this.buttonArray.concat(),
+      this.createButtonArray(),
       GameAreaComponent.MINE_NUM
     );
   }
 
-  private standBySubscribe() {
+  private restartSubscribe() {
     this.subsc = this.sbSvc.getRestart$().subscribe(() => {
       this.standBy();
     });

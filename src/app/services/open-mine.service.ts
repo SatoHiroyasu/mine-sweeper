@@ -22,10 +22,6 @@ export class OpenMineService {
     top: number,
     value: number
   }) {
-    if(info.value == -1){
-      this.openMineSub.complete()
-    } else if(info.value == 0) {
-      this.openMineSub.next(info);
-    }
+    this.openMineSub.next(info);
   }
 }

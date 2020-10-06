@@ -8,11 +8,12 @@
 
   .flag-count {
     font-size: 24px;
+    text-align: right;
     color: lightgreen;
     border: 1px solid lightgreen;
-    padding: 6px 0;
+    padding: 6px 2px;
     height: fit-content;
-    width: 90px;
+    width: 50px;
   }
 
   .restart-button {
