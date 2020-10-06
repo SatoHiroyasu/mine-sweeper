@@ -1,5 +1,27 @@
 .game-header-wrapper {
+  border: 1px solid lightgreen;
+  height: 50px;
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .flag-count {
+    font-size: 24px;
+    color: lightgreen;
     border: 1px solid lightgreen;
-    height: 50px;
-    margin: 0;
+    padding: 6px 0;
+    height: fit-content;
+    width: 90px;
+  }
+
+  .restart-button {
+    font-size: 24px;
+    color: lightgreen;
+    border: 1px solid lightgreen;
+    padding: 6px 30px;
+    height: fit-content;
+    width: auto;
+    cursor: pointer;
+  }
 }
