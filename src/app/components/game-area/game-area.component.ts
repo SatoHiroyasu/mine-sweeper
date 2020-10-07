@@ -10,9 +10,9 @@ import { StandByService } from 'src/app/services/stand-by.service';
   styleUrls: ['./game-area.component.scss'],
 })
 export class GameAreaComponent implements OnInit {
-  static HEIGHT = 10;
-  static WIDTH = 10;
-  static MINE_NUM = 15;
+  static HEIGHT = 20;
+  static WIDTH = 40;
+  static MINE_NUM = 150;
   public buttonArray = [];
   private subsc: Subscription;
 
