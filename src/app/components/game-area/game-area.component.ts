@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Styles } from 'src/app/defines/styles';
+import { FlagInfoService } from 'src/app/services/flag-info.service';
 import { StandByService } from 'src/app/services/stand-by.service';
 
 @Component({
@@ -11,11 +12,11 @@ import { StandByService } from 'src/app/services/stand-by.service';
 export class GameAreaComponent implements OnInit {
   static HEIGHT = 10;
   static WIDTH = 10;
-  static MINE_NUM = 20;
+  static MINE_NUM = 15;
   public buttonArray = [];
   private subsc: Subscription;
 
-  constructor(private sbSvc: StandByService) {}
+  constructor(private sbSvc: StandByService, private fiSvc: FlagInfoService) {}
 
   ngOnInit(): void {
     this.buttonArray = this.createButtonArray();
@@ -25,7 +26,7 @@ export class GameAreaComponent implements OnInit {
   }
 
   private createButtonArray() {
-    let arr = []
+    let arr = [];
     for (let i = 0; i < GameAreaComponent.HEIGHT; i++) {
       arr.push([]);
       for (let j = 0; j < GameAreaComponent.WIDTH; j++) {
@@ -44,6 +45,10 @@ export class GameAreaComponent implements OnInit {
   }
 
   private standBy() {
+    this.fiSvc.setFlagInfo(
+      this.createButtonArray(),
+      GameAreaComponent.MINE_NUM
+    );
     this.sbSvc.standByMines(
       this.createButtonArray(),
       GameAreaComponent.MINE_NUM

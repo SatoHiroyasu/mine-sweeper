@@ -11,7 +11,7 @@ import { GameAreaComponent } from '../game-area/game-area.component';
   styleUrls: ['./game-header.component.scss'],
 })
 export class GameHeaderComponent implements OnInit {
-  public flagCnt: number = 0;
+  public flagCnt: number;
   private subsc: Subscription;
 
   constructor(private sbSvc: StandByService, private fiSvc: FlagInfoService) {}
@@ -29,7 +29,8 @@ export class GameHeaderComponent implements OnInit {
   }
 
   public gameRestart() {
-    this.flagCnt = 0;
     this.sbSvc.restart();
+    this.subsc.unsubscribe();
+    this.flagInfoSubscribe();
   }
 }

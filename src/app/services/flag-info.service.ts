@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { Bectors } from '../defines/bectors';
+
+const FLAG = 1;
+const NOFLAG = 0;
 
 @Injectable({
   providedIn: 'root',
@@ -7,18 +11,21 @@ import { Subject } from 'rxjs';
 export class FlagInfoService {
   private flagInfo: number[][];
   private flagCnt;
-  private flagInfoSub: Subject<number>;
-  private codeSub: Subject<Array<any>>;
+  private flagInfoSub: BehaviorSubject<number>;
+  private codeSub: Subject<any>;
 
   constructor() {
-    this.flagCnt = 0;
-    this.flagInfoSub = new Subject<number>();
-    this.codeSub = new Subject<Array<any>>();
+    this.codeSub = new Subject<any>();
   }
 
   public updateFlagInfo(left: number, top: number, value: number) {
-    this.flagInfo[left][top] = value;
-    this.flagCnt += value == 1 ? 1 : -1;
+    if (value == 1) {
+      this.flagInfo[top][left] = FLAG;
+      this.flagCnt--;
+    } else if (value == 2) {
+      this.flagInfo[top][left] = NOFLAG;
+      this.flagCnt++;
+    }
     this.flagInfoSub.next(this.flagCnt);
   }
 
@@ -26,7 +33,46 @@ export class FlagInfoService {
     return this.flagInfoSub.asObservable();
   }
 
+  public setFlagInfo(buttonArray: number[][], mineNum: number) {
+    this.flagInfo = buttonArray;
+    this.flagCnt = mineNum;
+    this.flagInfoSub = new BehaviorSubject<number>(mineNum);
+  }
+
+  public getFlagCnt() {
+    return this.flagCnt;
+  }
+
   public getCode$() {
     return this.codeSub.asObservable();
+  }
+
+  public nextCode(left: number, top: number, mineValue: number) {
+    if (mineValue == 0) {
+      return;
+    } else if (this.isAbleCode(left, top, mineValue)) {
+      this.codeSub.next({ left: left, top: top });
+    }
+  }
+
+  private isAbleCode(left: number, top: number, mineValue: number) {
+    let cnt = 0;
+    for (let bector of Bectors.BECTORS) {
+      let _top = top + bector.top;
+      let _left = left + bector.left;
+      if (
+        _top < 0 ||
+        _top >= this.flagInfo.length ||
+        _left < 0 ||
+        _left >= this.flagInfo[0].length
+      ) {
+        continue;
+      }
+      if (this.flagInfo[top + bector.top][left + bector.left] == FLAG) {
+        cnt++;
+      }
+    }
+    console.log(this.flagInfo);
+    return cnt == mineValue;
   }
 }

@@ -51,8 +51,8 @@ export class MineButtonComponent implements OnInit {
   }
 
   private initializeParams() {
-    this.getThisElement().style.backgroundColor = "black";
-    this.getThisElement().style.color = "black";
+    this.getThisElement().style.backgroundColor = 'black';
+    this.getThisElement().style.color = 'black';
     this.display = '';
     this.mineValue = 0;
     this.isOpened = false;
@@ -94,20 +94,20 @@ export class MineButtonComponent implements OnInit {
         console.log(error);
       },
       () => {
-        if(this.mfSvc.getMineField()[this.top][this.left] == -1){
+        if (this.mfSvc.getMineField()[this.top][this.left] == -1) {
           this.mineValue = -1;
           this.display = ButtonDisplays[-1];
         }
       }
     );
   }
-  
+
   private restartSubscribe() {
     this.subsc = this.sbSvc.getRestart$().subscribe(() => {
       this.subsc.unsubscribe();
       this.initializeParams();
       this.subscribeAll();
-    })
+    });
   }
 
   private openMineSubscribe() {
@@ -115,18 +115,20 @@ export class MineButtonComponent implements OnInit {
       .getOpenMine$()
       .pipe(
         filter((info, index) => {
-          return (info.value == -1) || (
-            !this.isOpened && info.value == 0 &&
-            Math.abs(info.left - this.left) <= 1 &&
-            Math.abs(info.top - this.top) <= 1
+          return (
+            info.value == -1 ||
+            (!this.isOpened &&
+              info.value == 0 &&
+              Math.abs(info.left - this.left) <= 1 &&
+              Math.abs(info.top - this.top) <= 1)
           );
         })
       )
       .subscribe(
         (info) => {
-          if(info.value == -1){
+          if (info.value == -1) {
             this.isGameOver = true;
-          }else if(info.value == 0){
+          } else if (info.value == 0) {
             this.openDisplay();
           }
         },
@@ -138,7 +140,10 @@ export class MineButtonComponent implements OnInit {
   }
 
   public openDisplay() {
-    if (this.isGameOver || this.isOpened || this.flagValue >= 1) {
+    if (this.isGameOver || this.flagValue >= 1) {
+      return;
+    } else if (this.isOpened) {
+      this.fiSvc.nextCode(this.left, this.top, this.mineValue);
       return;
     }
     this.isOpened = true;
@@ -167,6 +172,7 @@ export class MineButtonComponent implements OnInit {
     this.flagValue = (this.flagValue + 1) % 3;
     this.display = ButtonDisplays[FLAG_VALUES[this.flagValue]];
     this.getThisElement().style.color = FLAG_COLOR[this.flagValue];
+    this.fiSvc.updateFlagInfo(this.left, this.top, this.flagValue);
     return false;
   }
 
@@ -174,18 +180,14 @@ export class MineButtonComponent implements OnInit {
     this.subsc = this.fiSvc
       .getCode$()
       .pipe(
-        filter((codeInfo) => {
+        filter((info) => {
           if (this.isGameOver || this.isOpened) {
             return false;
           }
-          let result = false;
-          for (let info of codeInfo) {
-            if (info.left == this.left && info.top == this.top) {
-              result = true;
-              break;
-            }
-          }
-          return result;
+          return (
+            Math.abs(info.left - this.left) <= 1 &&
+            Math.abs(info.top - this.top) <= 1
+          );
         })
       )
       .subscribe(() => {
