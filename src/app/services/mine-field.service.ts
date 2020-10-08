@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 const OPENED_VALUE = 99;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MineFieldService {
-  private mineField: number[][]
+  private mineField: number[][];
 
   constructor() {
     this.mineField = [];
@@ -24,12 +24,7 @@ export class MineFieldService {
     this.mineField = buttonArray;
   }
 
-  public setMineValue(
-    left: number,
-    top: number,
-    value: number
-  ) {
+  public setMineValue(left: number, top: number, value: number) {
     this.mineField[top][left] = value;
-    // console.log(this.mineField);
   }
 }

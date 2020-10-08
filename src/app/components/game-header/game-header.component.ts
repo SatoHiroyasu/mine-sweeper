@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Styles } from 'src/app/defines/styles';
 import { FlagInfoService } from 'src/app/services/flag-info.service';
+import { OpenMineService } from 'src/app/services/open-mine.service';
 import { StandByService } from 'src/app/services/stand-by.service';
 import { GameAreaComponent } from '../game-area/game-area.component';
 
@@ -17,13 +18,33 @@ export class GameHeaderComponent implements OnInit {
   public timeDisplay: string;
   private subsc: Subscription;
 
-  constructor(private sbSvc: StandByService, private fiSvc: FlagInfoService) {}
+  constructor(
+    private sbSvc: StandByService,
+    private fiSvc: FlagInfoService,
+    private omSvc: OpenMineService
+  ) {}
 
   ngOnInit(): void {
     this.timeStart();
     document.getElementById('game-header').style.width =
       GameAreaComponent.WIDTH * (Styles.BUTTON_WIDTH + 2) - 2 + 'px';
+    this.openMineSubscribe();
+    this.clearSubscribe();
     this.flagInfoSubscribe();
+  }
+
+  private openMineSubscribe() {
+    this.omSvc.getOpenMine$().subscribe((info) => {
+      if (info.value == -1) {
+        clearInterval(this.interval);
+      }
+    });
+  }
+
+  private clearSubscribe() {
+    this.omSvc.getClear$().subscribe(() => {
+      clearInterval(this.interval);
+    });
   }
 
   private flagInfoSubscribe() {
@@ -42,16 +63,16 @@ export class GameHeaderComponent implements OnInit {
 
   private timeStart() {
     this.timeCount = 0;
-    this.timeDisplay = "00:00";
+    this.timeDisplay = '00:00';
     this.interval = window.setInterval(() => {
-      if(this.timeDisplay == "99:58"){
+      if (this.timeDisplay == '99:58') {
         clearInterval(this.interval);
       }
       this.timeCount++;
       let sec = this.timeCount % 60;
-      let minDisplay = ("00" + ((this.timeCount - sec) / 60)).slice(-2);
-      let secDisplay = ("00" + (sec)).slice(-2);
-      this.timeDisplay = minDisplay + ":" + secDisplay;
-    }, 1000)
+      let minDisplay = ('00' + (this.timeCount - sec) / 60).slice(-2);
+      let secDisplay = ('00' + sec).slice(-2);
+      this.timeDisplay = minDisplay + ':' + secDisplay;
+    }, 1000);
   }
 }

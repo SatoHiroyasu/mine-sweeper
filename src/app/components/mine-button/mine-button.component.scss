@@ -1,16 +1,12 @@
 .mine-button-wrapper {
-    border: 1px solid lightgreen;
-    display: flex;
-    justify-content: center;
-    text-align: center;
+  border: 1px solid lightgreen;
+  display: flex;
+  justify-content: center;
+  text-align: center;
 
-    .mine-display {
-        height: 100%;
-        // width: 100%;
-        cursor: default;
-    }
-}
-
-.mine-button-wrapper:hover {
-    background-color: #338833 !important;
+  .mine-display {
+    height: 100%;
+    // width: 100%;
+    cursor: default;
+  }
 }

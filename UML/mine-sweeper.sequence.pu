@@ -1,0 +1,12 @@
+@startuml
+title ボタンを押すときのシーケンス
+hide footbox
+大量のボタン ->> OpenMineSubject :subscribe
+group 自身を開く
+  大量のボタン -> OpenMineSubject :next: (押されたボタンのみ)自身の座標
+  OpenMineSubject ->> 大量のボタン :押されたボタンの座標
+  group 数字がないボタン(周辺が開かれる)のとき
+    大量のボタン -> 大量のボタン: (自分の周囲ならば)自身を開く
+  end
+end
+@enduml

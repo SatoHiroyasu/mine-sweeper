@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Styles } from 'src/app/defines/styles';
@@ -77,6 +77,7 @@ export class MineButtonComponent implements OnInit {
     this.openMineSubscribe();
     this.codeSubscribe();
     this.restartSubscribe();
+    this.clearSubscribe();
   }
 
   private minesSubscribe() {
@@ -139,6 +140,12 @@ export class MineButtonComponent implements OnInit {
       );
   }
 
+  private clearSubscribe() {
+    this.omSvc.getClear$().subscribe(() => {
+      this.isGameOver = true;
+    });
+  }
+
   public openDisplay() {
     if (this.isGameOver || this.flagValue >= 1) {
       return;
@@ -155,6 +162,7 @@ export class MineButtonComponent implements OnInit {
       this.getThisElement().style.backgroundColor = '#338833';
     } else {
       this.display = this.mineValue + '';
+      this.getThisElement().style.backgroundColor = 'black';
       this.getThisElement().style.color = 'lightgreen';
     }
     this.omSvc.nextOpenMine({
@@ -162,7 +170,6 @@ export class MineButtonComponent implements OnInit {
       top: this.top,
       value: this.mineValue,
     });
-    // this.subsc.unsubscribe();
   }
 
   public setFlag() {
@@ -193,6 +200,20 @@ export class MineButtonComponent implements OnInit {
       .subscribe(() => {
         this.openDisplay();
       });
+  }
+
+  @HostListener('mouseenter')
+  public onMouseEnter() {
+    if (!this.isGameOver && !this.isOpened) {
+      this.getThisElement().style.backgroundColor = '#338833';
+    }
+  }
+
+  @HostListener('mouseleave')
+  public onMouseLeave() {
+    if (!this.isGameOver && !this.isOpened) {
+      this.getThisElement().style.backgroundColor = 'black';
+    }
   }
 }
 
