@@ -5,13 +5,15 @@ import { AppComponent } from './app.component';
 import { GameAreaComponent } from './components/game-area/game-area.component';
 import { GameHeaderComponent } from './components/game-header/game-header.component';
 import { MineButtonComponent } from './components/mine-button/mine-button.component';
+import { OptionModalComponent } from './components/option-modal/option-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameAreaComponent,
     GameHeaderComponent,
-    MineButtonComponent
+    MineButtonComponent,
+    OptionModalComponent
   ],
   imports: [
     BrowserModule

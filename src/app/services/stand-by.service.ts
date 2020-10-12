@@ -11,7 +11,6 @@ export class StandByService {
   private minesSub: ReplaySubject<any>;
 
   constructor(private mfSvc: MineFieldService) {
-    // this.minesSub = new ReplaySubject<any>();
     this.restartSub = new Subject<any>();
   }
 
@@ -42,7 +41,6 @@ export class StandByService {
       }
     }
     this.mfSvc.setMineField(buttonArray);
-    console.log(this.mfSvc.getMineField());
     this.minesSub.complete();
   }
 }

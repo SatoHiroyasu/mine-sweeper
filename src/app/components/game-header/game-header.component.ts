@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Styles } from 'src/app/defines/styles';
 import { FlagInfoService } from 'src/app/services/flag-info.service';
+import { MineFieldService } from 'src/app/services/mine-field.service';
 import { OpenMineService } from 'src/app/services/open-mine.service';
 import { StandByService } from 'src/app/services/stand-by.service';
 import { GameAreaComponent } from '../game-area/game-area.component';
@@ -21,13 +22,14 @@ export class GameHeaderComponent implements OnInit {
   constructor(
     private sbSvc: StandByService,
     private fiSvc: FlagInfoService,
-    private omSvc: OpenMineService
+    private omSvc: OpenMineService,
+    private mfSvc: MineFieldService
   ) {}
 
   ngOnInit(): void {
     this.timeStart();
     document.getElementById('game-header').style.width =
-      GameAreaComponent.WIDTH * (Styles.BUTTON_WIDTH + 2) - 2 + 'px';
+    this.mfSvc.getMineField()[0].length * (Styles.BUTTON_WIDTH + 2) - 2 + 'px';
     this.openMineSubscribe();
     this.clearSubscribe();
     this.flagInfoSubscribe();

@@ -7,4 +7,20 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'mine-sweeper';
+  public isStarted = false;
+
+  public gameInfo: {
+    height: number,
+    width: number,
+    mineNum: number
+  } = {
+    height: 10,
+    width: 10,
+    mineNum: 10
+  }
+
+  public gameStart(event) {
+    this.gameInfo = event;
+    this.isStarted = true;
+  }
 }

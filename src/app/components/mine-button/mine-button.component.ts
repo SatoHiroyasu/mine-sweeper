@@ -61,7 +61,7 @@ export class MineButtonComponent implements OnInit {
   }
 
   private getThisElement() {
-    let elementIndex = GameAreaComponent.WIDTH * this.top + this.left;
+    let elementIndex = this.mfSvc.getMineField()[0].length * this.top + this.left;
     return document.getElementsByName('mine-button').item(elementIndex);
   }
 

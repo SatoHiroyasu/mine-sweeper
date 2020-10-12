@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Styles } from 'src/app/defines/styles';
 import { FlagInfoService } from 'src/app/services/flag-info.service';
@@ -11,11 +11,14 @@ import { StandByService } from 'src/app/services/stand-by.service';
   styleUrls: ['./game-area.component.scss'],
 })
 export class GameAreaComponent implements OnInit {
-  static HEIGHT = 10;
-  static WIDTH = 20;
-  static MINE_NUM = 1;
   public buttonArray = [];
   private subsc: Subscription;
+
+  @Input() gameInfo: {
+    height: number,
+    width: number,
+    mineNum: number
+  }
 
   constructor(
     private sbSvc: StandByService,
@@ -32,9 +35,9 @@ export class GameAreaComponent implements OnInit {
 
   private createButtonArray() {
     let arr = [];
-    for (let i = 0; i < GameAreaComponent.HEIGHT; i++) {
+    for (let i = 0; i < this.gameInfo.height; i++) {
       arr.push([]);
-      for (let j = 0; j < GameAreaComponent.WIDTH; j++) {
+      for (let j = 0; j < this.gameInfo.width; j++) {
         arr[i].push(0);
       }
     }
@@ -52,15 +55,15 @@ export class GameAreaComponent implements OnInit {
   private standBy() {
     this.fiSvc.setFlagInfo(
       this.createButtonArray(),
-      GameAreaComponent.MINE_NUM
+      this.gameInfo.mineNum
     );
     this.sbSvc.standByMines(
       this.createButtonArray(),
-      GameAreaComponent.MINE_NUM
+      this.gameInfo.mineNum
     );
     this.omSvc.setNorma(
-      GameAreaComponent.WIDTH * GameAreaComponent.HEIGHT -
-        GameAreaComponent.MINE_NUM
+      this.gameInfo.height * this.gameInfo.width -
+      this.gameInfo.mineNum
     );
   }
 

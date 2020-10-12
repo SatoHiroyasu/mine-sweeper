@@ -1,0 +1,18 @@
+<div class="option-modal-wrapper">
+    <div class="option-input">
+        HEIGHT {{ height.value }}<br />
+        <input type="range" #height min="10" max="30" [value]="info.height" (change)="changeValue('height', height.value)">
+    </div>
+    <div class="option-input">
+        WIDTH {{ width.value }}<br />
+        <input type="range" #width min="10" max="40" [value]="info.width" (change)="changeValue('width', width.value)">
+    </div>
+    <div class="option-input">
+        MINE COUNT {{ mineNum.value }}<br />
+        <input type="range" #mineNum min="10" [max]="info.height * info.width / 4" [value]="info.mineNum" (change)="changeValue('mineNum', mineNum.value)">
+    </div>
+    <div class="start-button"
+    (click)="gameStart()">
+        START
+    </div>
+</div>

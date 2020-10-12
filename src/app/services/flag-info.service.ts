@@ -72,7 +72,6 @@ export class FlagInfoService {
         cnt++;
       }
     }
-    console.log(this.flagInfo);
     return cnt == mineValue;
   }
 }

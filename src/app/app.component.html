@@ -1,3 +1,4 @@
 <div class="mine-sweeper">
-  <game-area></game-area>
+  <option-modal *ngIf="!isStarted" (gameInfo)="gameStart($event)"></option-modal>
+  <game-area *ngIf="isStarted" [gameInfo]="gameInfo"></game-area>
 </div>
